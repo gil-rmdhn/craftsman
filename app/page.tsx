@@ -1,7 +1,6 @@
-// app/page.tsx
 import prisma from '../lib/prisma'; // Import dari lib/prisma.ts
 import ProductCard from '../components/productCard';
-import Header from '../components/Header'; // Import Header
+import Header from '../components/Header'; // Import Header yang baru
 
 export default async function Home() {
   // Ambil data produk dari database menggunakan Prisma
@@ -13,12 +12,13 @@ export default async function Home() {
   });
 
   return (
-    <div className="bg-white">
+    <div className="bg-gray-100">
       {/* Header */}
       <Header />
 
       {/* Konten Produk */}
       <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
+        <h2 className="text-2xl font-bold text-gray-900">Produk Terbaru</h2>
         <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {/* Looping untuk menampilkan produk */}
           {products.map((product) => (

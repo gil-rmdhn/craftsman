@@ -14,11 +14,8 @@ export default function ProductCard({ id, name, slug, price, image }: ProductCar
       <img src={image || '/images/default.jpg'} alt={name} className="h-48 w-full object-cover rounded-md" />
       <div className="mt-4">
         <h3 className="text-sm text-gray-700">
-          <Link href={`/product/${slug}`}>
-            <a className="hover:underline">{name}</a>
-          </Link>
+          <Link href={`/product/${slug}`}>{name}</Link>
         </h3>
-        <p className="mt-1 text-sm text-gray-500">ID: {id}</p>
         <p className="mt-1 text-lg font-medium text-gray-900">Rp {price.toLocaleString()}</p>
       </div>
     </div>
