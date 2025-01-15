@@ -1,31 +1,44 @@
-import prisma from '../lib/prisma'; // Import dari lib/prisma.ts
-import ProductCard from '../components/productCard';
-import Header from '../components/Header'; // Import Header yang baru
+import Link from 'next/link';
+import Image from 'next/image';
 
-export default async function Home() {
-  // Ambil data produk dari database menggunakan Prisma
-  const products = await prisma.product.findMany({
-    take: 12,
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
-
+export default function Header() {
   return (
-    <div className="bg-gray-100">
-      {/* Header */}
-      <Header />
+    <header className="bg-gray-800 text-white font-sans shadow-md">
+      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
+        {/* Logo atau Nama Toko */}
+        <Link href="/" legacyBehavior>
+          ProdukCraft
+        </Link>
 
-      {/* Konten Produk */}
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8">
-        <h2 className="text-2xl font-bold text-gray-900">Produk Terbaru</h2>
-        <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {/* Looping untuk menampilkan produk */}
-          {products.map((product) => (
-            <ProductCard key={product.id} id={product.id} name={product.name} slug={product.slug} price={Number(product.price)} image={product.image || ''} />
-          ))}
+        {/* Navigasi Menu */}
+        <nav>
+          <ul className="flex space-x-6">
+            <li>
+              <Link href="/" legacyBehavior>
+                Beranda
+              </Link>
+            </li>
+            <li>
+              <Link href="/about" legacyBehavior>
+                Tentang Kami
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" legacyBehavior>
+                Kontak
+              </Link>
+            </li>
+          </ul>
+        </nav>
+
+        {/* Search Bar */}
+        <div className="relative">
+          <input type="text" placeholder="Cari produk..." className="rounded-lg px-4 py-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+          <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+            <Image src="/magnifying-glass-solid.svg" alt="Search Icon" width={24} height={24} />
+          </button>
         </div>
       </div>
-    </div>
+    </header>
   );
 }
