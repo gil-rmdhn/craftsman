@@ -7,7 +7,7 @@ export default function Header() {
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo atau Nama Toko */}
         <Link href="/" legacyBehavior>
-          ProdukCraft
+          Asa Cipto-Roso
         </Link>
 
         {/* Navigasi Menu */}
