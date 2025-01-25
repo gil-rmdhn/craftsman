@@ -1,32 +1,46 @@
 import prisma from '../../../lib/prisma';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
-// Fetch all products
-export async function GET() {
-  try {
-    const products = await prisma.product.findMany();
-    return new Response(JSON.stringify(products), { status: 200 });
-  } catch (error) {
-    console.error(error);
-    return new Response('Error fetching products', { status: 500 });
-  }
-}
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'POST') {
+    try {
+      const { name, price, description, image } = req.body;
 
-// Create a new product
-export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-    const product = await prisma.product.create({
-      data: {
-        name: body.name,
-        price: body.price,
-        slug: body.slug,
-        image: body.image,
-        description: body.description,
-      },
-    });
-    return new Response(JSON.stringify(product), { status: 201 });
-  } catch (error) {
-    console.error(error);
-    return new Response('Error creating product', { status: 500 });
+      // Validasi input
+      if (!name || !price) {
+        return res.status(400).json({ error: 'Nama dan harga wajib diisi' });
+      }
+
+      // Generate slug secara otomatis
+      const slug = name.toLowerCase().replace(/\s+/g, '-');
+
+      const newProduct = await prisma.product.create({
+        data: {
+          name,
+          slug,
+          price: Number(price),
+          description: description || '',
+          image: image || '/placeholder.png', // Default gambar
+        },
+      });
+
+      res.status(201).json(newProduct);
+    } catch (error) {
+      console.error('Error creating product:', error);
+      res.status(500).json({ error: 'Gagal membuat produk' });
+    }
+  } else if (req.method === 'GET') {
+    try {
+      const products = await prisma.product.findMany({
+        orderBy: { createdAt: 'desc' },
+      });
+      res.status(200).json(products);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).json({ error: 'Gagal mengambil produk' });
+    }
+  } else {
+    res.setHeader('Allow', ['GET', 'POST']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
